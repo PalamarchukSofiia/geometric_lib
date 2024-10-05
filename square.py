@@ -7,4 +7,4 @@ def area(a):
 def perimeter(a):
     # Возвращаем периметр квадрата, вычисленную по формуле: 4 * сторона
     return 4 * a
-print(area(4),perimeter(4))
+
