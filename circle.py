@@ -11,4 +11,4 @@ def perimeter(r):
     # Возвращаем периметр круга, вычисленную по формуле: 2 * pi * r
     return 2 * math.pi * r
 
-print(area(5), perimeter(5))
+
