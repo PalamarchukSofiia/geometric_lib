@@ -1,76 +1,89 @@
-import pytest
-from calculate import calc
-from math import pi
+import circle
+import square
+import triangle
 
-def test_calc_area_circle():
-  fig = "circle"
-  func = "area"
-  size = [5]
-  expected_result = f"Area of circle (π * 5^2) = {pi * 5**2:.2f}"
-  result = calc(fig, func, size)
-  assert result == expected_result, f"Expected '{expected_result}', got '{result}'"
+figs = ['circle', 'square', 'triangle']
+funcs = ['perimeter', 'area']
+sizes = {
+    "perimeter-circle": 1,
+    "area-circle": 1,
+    "perimeter-square": 1,
+    "area-square": 1,
+    "perimeter-triangle": 3,
+    "area-triangle": 3,
+}
 
-def test_calc_perimeter_circle():
-  fig = "circle"
-  func = "perimeter"
-  size = [7]
-  expected_result = f"Perimeter of circle (7) = {2 * pi * 7:.2f}"
-  result = calc(fig, func, size)
-  assert result == expected_result, f"Expected '{expected_result}', got '{result}'"
+# Создаем словарь для безопасного вызова функций
+function_mapping = {
+    'circle': {
+        'perimeter': circle.perimeter,
+        'area': circle.area
+    },
+    'square': {
+        'perimeter': square.perimeter,
+        'area': square.area
+    },
+    'triangle': {
+        'perimeter': triangle.perimeter,
+        'area': triangle.area
+    }
+}
 
-def test_calc_area_square():
-  fig = "square"
-  func = "area"
-  size = [6]
-  expected_result = f"Area of square (6 * 6) = {6 * 6}"
-  result = calc(fig, func, size)
-  assert result == expected_result, f"Expected '{expected_result}', got '{result}'"
+def calc(fig, func, size):
+    if fig not in figs:
+        raise ValueError(f"Figure {fig} is not supported. Available figures: {figs}")
+    if func not in funcs:
+        raise ValueError(f"Function {func} is not supported. Available functions: {funcs}")
 
-def test_calc_perimeter_square():
-  fig = "square"
-  func = "perimeter"
-  size = [8]
-  expected_result = f"Perimeter of square (8) = {4 * 8}"
-  result = calc(fig, func, size)
-  assert result == expected_result, f"Expected '{expected_result}', got '{result}'"
+    expected_size = sizes.get(f"{func}-{fig}", 1)
+    if len(size) != expected_size:
+        raise ValueError(f"Invalid number of sizes for {fig} {func}: expected {expected_size}, got {len(size)}")
 
-def test_calc_area_triangle():
-  fig = "triangle"
-  func = "area"
-  size = [6, 8, 10] # Pythagorean triple for easier calculation
-  s = (6 + 8 + 10) / 2 # Semi-perimeter
-  area = math.sqrt(s * (s - 6) * (s - 8) * (s - 10))
-  expected_result = f"Area of triangle (Heron's formula for sides 6, 8, 10) = {area:.2f}"
-  result = calc(fig, func, size)
-  assert result == expected_result, f"Expected '{expected_result}', got '{result}'"
+    try:
+        # Безопасный вызов функции через словарь
+        result = function_mapping[fig][func](*size)
+    except Exception as e:
+        raise e
 
+    # Форматирование результата
+    if fig == 'circle':
+        if func == 'perimeter':
+            operation_str = f"Perimeter of {fig} ({size[0]}) = {result:.2f}"
+        elif func == 'area':
+            operation_str = f"Area of {fig} (π * {size[0]}^2) = {result:.2f}"
+    elif fig == 'square':
+        if func == 'perimeter':
+            operation_str = f"Perimeter of {fig} ({size[0]}) = {result}"
+        elif func == 'area':
+            operation_str = f"Area of {fig} ({size[0]} * {size[0]}) = {result}"
+    elif fig == 'triangle':
+        if func == 'perimeter':
+            operation_str = f"Perimeter of {fig} ({' + '.join(map(str, size))}) = {result}"
+        elif func == 'area':
+            operation_str = f"Area of {fig} (Heron's formula for sides {size[0]}, {size[1]}, {size[2]}) = {result:.2f}"
+    else:
+        operation_str = f"{func.capitalize()} of {fig} with size {', '.join(map(str, size))} = {result}"
 
-def test_calc_perimeter_triangle():
-  fig = "triangle"
-  func = "perimeter"
-  size = [12, 15, 9]
-  expected_result = f"Perimeter of triangle (12 + 15 + 9) = {12 + 15 + 9}"
-  result = calc(fig, func, size)
-  assert result == expected_result, f"Expected '{expected_result}', got '{result}'"
+    return operation_str
 
-def test_calc_invalid_figure():
-  fig = "octagon"
-  func = "area"
-  size = [3]
-  with pytest.raises(ValueError, match=f"Figure {fig} is not supported. Available figures: .*"):
-    calc(fig, func, size)
+if __name__ == "__main__":
+    func = ''
+    fig = ''
+    size = []
 
-def test_calc_invalid_function():
-  fig = "circle"
-  func = "volume"
-  size = [3]
-  with pytest.raises(ValueError, match=f"Function {func} is not supported. Available functions: .*"):
-    calc(fig, func, size)
+    while fig not in figs:
+        fig = input(f"Enter figure name, available are {figs}:\n").strip().lower()
 
-def test_calc_invalid_size():
-  fig = "circle"
-  func = "area"
-  size = [3, 4]
-  with pytest.raises(ValueError, match="Invalid number of sizes for circle area: expected 1, got 2"):
-    calc(fig, func, size)
+    while func not in funcs:
+        func = input(f"Enter function name, available are {funcs}:\n").strip().lower()
+
+    while len(size) != sizes.get(f"{func}-{fig}", 1):
+        try:
+            size_input = input("Input figure sizes separated by space: ").strip()
+            size = list(map(float, size_input.split()))
+        except ValueError:
+            print("Please enter valid numbers.")
+
+    operation_str = calc(fig, func, size)
+    print(operation_str)
 
