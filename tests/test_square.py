@@ -1,36 +1,46 @@
-import unittest
+import pytest
+from square import area, perimeter
 
-from square import area as square_area, perimeter as square_perimeter
+def test_area_with_positive_integer():
+  input_value = 7
+  expected_result = 49
+  result = area(input_value)
+  assert result == expected_result, f"Expected {expected_result}, got {result}"
 
-def validate_input(func):
+def test_area_with_float():
+  input_value = 3.14
+  expected_result = 3.14**2
+  result = area(input_value)
+  assert result == pytest.approx(expected_result), f"Expected {expected_result}, got {result}"
 
-    def wrapper(*args, **kwargs):
-        if any(isinstance(arg, (str, list)) for arg in args):
-            raise TypeError("Аргументы должны быть числами")
-        
-        if any(arg <= 0 for arg in args if isinstance(arg, (int, float))):
-            raise ValueError("Аргументы должны быть положительными")
-        
-        return func(*args, **kwargs)
-    
-    return wrapper
+def test_area_with_negative_integer():
+  input_value = -5
+  with pytest.raises(ValueError, match="Input must be greater than or equal to 0"):
+    area(input_value)
 
-square_area = validate_input(square_area)
-square_perimeter = validate_input(square_perimeter)
+def test_area_with_invalid_string():
+  input_value = "hello"
+  with pytest.raises(TypeError, match="Input must be a number"): # Исправлено на TypeError
+    area(input_value)
 
-class TestSquare(unittest.TestCase):
+def test_perimeter_with_positive_integer():
+  input_value = 11
+  expected_result = 44
+  result = perimeter(input_value)
+  assert result == expected_result, f"Expected {expected_result}, got {result}"
 
-    def test_area_small(self):
-        self.assertEqual(square_area(11), 121)
+def test_perimeter_with_float():
+  input_value = 6.28
+  expected_result = 4 * 6.28
+  result = perimeter(input_value)
+  assert result == pytest.approx(expected_result), f"Expected {expected_result}, got {result}"
 
-    def test_area_large(self):
-        self.assertAlmostEqual(square_area(1e10), 3e20)
+def test_perimeter_with_negative_integer():
+  input_value = -12
+  with pytest.raises(ValueError, match="Input must be greater than or equal to 0"):
+    perimeter(input_value)
 
-    def test_perimeter_small(self):
-        self.assertEqual(square_perimeter(11), 44)
-
-    def test_perimeter_large(self):
-        self.assertAlmostEqual(square_perimeter(1e10), 4e10)
-
-if __name__ == '__main__':
-    unittest.main()
+def test_perimeter_with_invalid_string():
+  input_value = "world"
+  with pytest.raises(TypeError, match="Input must be a number"): # Исправлено на TypeError
+    perimeter(input_value)
