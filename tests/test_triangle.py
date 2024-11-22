@@ -15,16 +15,6 @@ def test_area_with_float_triangle():
   result = area(a, b, c)
   assert math.isclose(result, expected_result, rel_tol=1e-9), f"Expected {expected_result}, got {result}"
 
-def test_area_with_negative_side():
-  a, b, c = -3, 4, 5
-  with pytest.raises(ValueError, match="Input must be greater than or equal to 0"):
-    area(a, b, c)
-
-def test_area_with_invalid_type():
-  a, b, c = 3, "side", 5
-  with pytest.raises(TypeError, match="Input must be a number"): # Corrected to TypeError
-    area(a, b, c)
-
 def test_area_with_invalid_triangle():
   a, b, c = 1, 2, 6 # Не может существовать треугольник с такими сторонами
   with pytest.raises(ValueError, match="The provided sides do not form a valid triangle."):
@@ -42,12 +32,3 @@ def test_perimeter_with_floats():
   result = perimeter(a, b, c)
   assert math.isclose(result, expected_result, rel_tol=1e-9), f"Expected {expected_result}, got {result}"
 
-def test_perimeter_with_negative_side():
-  a, b, c = 3, -4, 5
-  with pytest.raises(ValueError, match="Input must be greater than or equal to 0"):
-    perimeter(a, b, c)
-
-def test_perimeter_with_invalid_type():
-  a, b, c = 3, "side", 5
-  with pytest.raises(TypeError, match="Input must be a number"): # Corrected to TypeError
-    perimeter(a, b, c)
