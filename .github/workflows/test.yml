@@ -21,13 +21,14 @@ jobs:
       FULL_NAME: "Palamarchuk Sofia Igorevna"
       GROUP_NUMBER: "M3114"
      
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Print Information
         run: |
-          echo "ФИО: $FULL_NAME"
+          echo "ФИО: $FIO"
           echo "Номер группы: $GROUP_NUMBER"
           echo "GitHub Ник: ${{ github.actor }}"
 
@@ -44,10 +45,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Create virtual environment
+      - name: Create virt environment
         run: |
           python -m venv venv
           source venv/bin/activate
+      
 
       - name: Install dependencies
         run: |
@@ -57,9 +59,9 @@ jobs:
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
 
-      - name: Run unittests
+      - name: Run pytest
         run: |
-          python -m unittest discover -s tests -p "*.py"
+          pytest
 
       - name: Run black
         run: |
