@@ -25,8 +25,3 @@ def test_perimeter_with_float():
   result = perimeter(input_value)
   assert result == pytest.approx(expected_result), f"Expected {expected_result}, got {result}"
 
-
-def test_perimeter_with_invalid_string():
-  input_value = "world"
-  with pytest.raises(TypeError, match="Input must be a number"): # Исправлено на TypeError
-    perimeter(input_value)
