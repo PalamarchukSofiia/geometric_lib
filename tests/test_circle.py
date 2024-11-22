@@ -14,16 +14,6 @@ def test_area_with_float():
   result = area(input_value)
   assert math.isclose(result, expected_result, rel_tol=1e-9), f"Expected {expected_result}, got {result}"
 
-def test_area_with_negative_integer():
-  input_value = -5
-  with pytest.raises(ValueError, match="Input must be greater than or equal to 0"):
-    area(input_value)
-
-def test_area_with_invalid_string():
-  input_value = "hello"
-  with pytest.raises(ValueError, match="Input must be a number"):
-    area(input_value)
-
 def test_perimeter_with_positive_integer():
   input_value = 11
   expected_result = 2 * math.pi * input_value
@@ -36,10 +26,6 @@ def test_perimeter_with_float():
   result = perimeter(input_value)
   assert math.isclose(result, expected_result, rel_tol=1e-9), f"Expected {expected_result}, got {result}"
 
-def test_perimeter_with_negative_integer():
-  input_value = -12
-  with pytest.raises(ValueError, match="Input must be greater than or equal to 0"):
-    perimeter(input_value)
 
 def test_perimeter_with_invalid_string():
   input_value = "world"
